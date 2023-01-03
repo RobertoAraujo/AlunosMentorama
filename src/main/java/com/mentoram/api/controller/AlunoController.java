@@ -1,6 +1,7 @@
 package com.mentoram.api.controller;
 
 import com.mentoram.api.dominio.entity.AlunoEntity;
+import com.mentoram.api.exeption.MenssagemException;
 import com.mentoram.api.service.AlunosService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/aluno")
@@ -21,6 +23,17 @@ public class AlunoController {
     public void cadAluno(@RequestBody AlunoEntity alunoEntity) {
         LOGGER.info("Cadastrado com Sucesso!");
         service.cadAluno(alunoEntity);
+    }
+
+    @GetMapping(value = "/buscaId/{id}")
+    public Optional<AlunoEntity> buscarPorId(@PathVariable("id") Long id) {
+        if (service.buscaAlunoId(id).isPresent()) {
+            LOGGER.info("Id Buscado é " + id);
+            return service.buscaAlunoId(id);
+        } else {
+            LOGGER.info("Id não encontrado " + id);
+            return null;
+        }
     }
 
     @GetMapping(value = "/idade/{idade}")
